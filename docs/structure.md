@@ -30,7 +30,7 @@ pass-dice/
 ├── babel.config.js       Babel preset plus the Unistyles plugin (root: "src")
 ├── tsconfig.json         TypeScript config and the "@/..." path aliases
 ├── eslint.config.js      Lint config (`npx expo lint`)
-├── assets/               Static files referenced by app.json (app icon, splash, adaptive icon)
+├── assets/               Static files referenced by app.json (app icon, splash, adaptive icon, icon-source.svg master)
 ├── docs/                 Project documentation (this folder)
 ├── modules/              Local native modules (Android privacy helper)
 ├── .claude/, .vscode/    Editor and Claude Code settings (not app code)
@@ -151,6 +151,17 @@ Native code only changes with a new development build (`npx expo run:android`).
 ### Android manifest hardening
 
 `app.json` sets `android.allowBackup` to `false` so Google Drive auto-backup never copies the app's storage (the clipboard-clear record and the saved theme). It also lists `blockedPermissions` for `READ_EXTERNAL_STORAGE`, `WRITE_EXTERNAL_STORAGE`, `SYSTEM_ALERT_WINDOW` and `VIBRATE`, which the Expo template adds but this app never uses. Only `INTERNET` and the Play Billing permissions remain. These take effect on the next native build (`npx expo run:android` or an EAS build).
+
+### App icon
+
+The icon is a red die on near-black with a keyhole as the centre pip. `assets/icon-source.svg` is the vector master (100-unit grid, die 64 wide). The files in `assets/images/` and `assets/expo.icon/` are all rendered from it with the same proportions:
+
+- `icon.png`: 1024 px, opaque, die at 64% of the width.
+- `android-icon-foreground.png`, `android-icon-background.png`, `android-icon-monochrome.png`: 1024 px adaptive layers. The die is 49% of the width so it stays inside the circular safe zone. The background is solid `#0D0C0C`; the monochrome layer is a white die with the pips and keyhole cut out.
+- `splash-icon.png`: transparent, die at 80% of the width, shown on the `#0D0C0C` splash colour at `imageWidth` 160.
+- `expo.icon/`: the iOS Icon Composer bundle, with `Assets/die.png` over a dark solid fill.
+
+Icon changes need a new native build to show up.
 
 ### `constants/`
 
