@@ -41,12 +41,12 @@ export default function usePasswordText(props: IPasswordTextProps) {
 
   const isCurrent = state.key === animationKey;
   const isFinished = isCurrent && state.settled >= password.length;
-  const settledCount =
-    !shouldAnimate || isFinished
-      ? password.length
-      : isCurrent
-        ? state.settled
-        : 0;
+  const isFullySettled = !shouldAnimate || isFinished;
+  const settledCount = isFullySettled
+    ? password.length
+    : isCurrent
+      ? state.settled
+      : 0;
 
   // Until the first tick arrives there is no noise yet, so use the password
   // reversed for that single frame.
