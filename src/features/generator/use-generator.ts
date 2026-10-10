@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { AccessibilityInfo } from "react-native";
 import Toast from "react-native-toast-message";
 import {
@@ -52,7 +52,10 @@ export default function useGenerator(): IUseGeneratorReturn {
     createPassword(DEFAULT_LENGTH, DEFAULT_SELECTION),
   );
 
-  const strength = getPasswordStrength(length, selection);
+  const strength = useMemo(
+    () => getPasswordStrength(length, selection),
+    [length, selection],
+  );
 
   const changeLength = (nextLength: number) => {
     const clamped = Math.min(Math.max(nextLength, LENGTH_MIN), LENGTH_MAX);

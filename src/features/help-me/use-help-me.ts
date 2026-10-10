@@ -211,9 +211,9 @@ export default function useHelpMe(): IUseHelpMeReturn {
 
   return {
     isAvailable,
-    isProductsLoading: isAvailable ? isProductsLoading : false,
-    productsById: isAvailable ? productsById : {},
-    purchasingProductId: isAvailable ? purchasingProductId : null,
+    isProductsLoading,
+    productsById,
+    purchasingProductId,
     purchase,
   };
 }
