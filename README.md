@@ -15,7 +15,7 @@ Android is the supported platform. iOS and web are not supported.
 | Tool | Version |
 |---|---|
 | Node.js | 20.19.4 or newer (22.13+ and 24.3+ also work; developed on 24) |
-| pnpm | 9 (the lockfile is `pnpm-lock.yaml`) |
+| pnpm | 12 (pinned in `package.json`; the lockfile is `pnpm-lock.yaml`) |
 | JDK | 17 or newer (developed on 21) |
 | Android Studio | With the Android SDK, platform tools and an emulator, or a physical Android device with USB debugging on |
 
@@ -27,7 +27,7 @@ export PATH=$PATH:$ANDROID_HOME/emulator
 export PATH=$PATH:$ANDROID_HOME/platform-tools
 ```
 
-If you do not have pnpm, install it with `npm install -g pnpm@9`.
+If you do not have pnpm, install it with `npm install -g pnpm@12`.
 
 ## Getting started
 

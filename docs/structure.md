@@ -33,7 +33,6 @@ pass-dice/
 ├── assets/               Static files referenced by app.json (app icon, splash, adaptive icon, icon-source.svg master)
 ├── docs/                 Project documentation (this folder)
 ├── modules/              Local native modules (Android privacy helper)
-├── .claude/, .vscode/    Editor and Claude Code settings (not app code)
 └── src/                  All application code
 ```
 
@@ -123,7 +122,7 @@ Lucide 1.x no longer includes brand logos, so `github.tsx` and `linkedin.tsx` ar
 Small, framework-light helpers used by more than one place.
 
 - `secure-random.ts` exports `secureRandomInt(max)`, an unbiased random integer from the device's secure random generator (`expo-crypto`). If the generator fails it throws `SecureRandomError`; callers show an error and never fall back to a weaker source. Use it for anything security-sensitive; never `Math.random`.
-- `sensitive-clipboard.ts` copies text to the clipboard (marked sensitive on Android) and clears it later, but only if it still holds that text. `resumeClipboardClear()` runs once at app start (in `app/_layout.tsx`) to finish a clear that was interrupted when the app was killed. See "Local native modules" below.
+- `sensitive-clipboard.ts` copies text to the clipboard (marked sensitive on Android) and clears it later, but only if it still holds that text. `resumeClipboardClear()` runs once at app start (in `layouts/root/use-root-layout.ts`) to finish a clear that was interrupted when the app was killed. See "Local native modules" below.
 
 ### Types defined outside `.interface.ts` files (intentional)
 
@@ -232,7 +231,7 @@ Defines the light and dark themes (colors, typography, a `gap` spacing helper), 
 
 - Run them with `npx jest` (or `pnpm test`). Config is the `jest` block in `package.json`; it maps `@/...` the same way `tsconfig.json` does.
 - Tests sit next to the code they cover, named `<file>.test.ts`. Never put a test file inside `src/app/`, because every file there is a route.
-- What is covered: the secure random helper, the generator and strength logic, the Generator screen hook (error state, last-checkbox rule, copy flow), the scramble animation hook and the clipboard clear (including the restart case).
+- What is covered: the secure random helper, the generator and strength logic, the Generator screen hook (error state, last-checkbox rule, copy flow), the scramble animation hook, the clipboard clear (including the restart case) and the Help Me helpers and purchase hook.
 - Hooks are tested with `renderHook`; native and storage modules are mocked in the test file. For timing, use `jest.useFakeTimers()` and `jest.advanceTimersByTimeAsync`.
 - Security-sensitive code should keep tests that fail if the safeguard is removed (rejection sampling, no weaker fallback, the length guard, "never store the password").
 
