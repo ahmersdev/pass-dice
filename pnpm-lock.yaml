@@ -248,8 +248,8 @@ importers:
         specifier: ^2.5.2
         version: 2.5.2(react-native@0.86.3(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/jest-preset@0.86.3(@babel/core@7.29.7(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.3(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3)
       react-native-unistyles:
-        specifier: ^3.4.0
-        version: 3.4.0(223de1209a14f7bb424b020bbdd439a1)
+        specifier: ^3.5.2
+        version: 3.5.2(223de1209a14f7bb424b020bbdd439a1)
       react-native-worklets:
         specifier: 0.10.1
         version: 0.10.1(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.86.3(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(react-native@0.86.3(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/jest-preset@0.86.3(@babel/core@7.29.7(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.3(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1)
@@ -4222,8 +4222,8 @@ packages:
       react: '*'
       react-native: '*'
 
-  react-native-unistyles@3.4.0:
-    resolution: {integrity: sha512-5/PXnrcOm6YuEgseb+4VvNEp+ehUd8VR67NUwsITL0w2KpdSt8016hRheYweLqpTMJgLwG9fdl0ynEiVCziopg==}
+  react-native-unistyles@3.5.2:
+    resolution: {integrity: sha512-Jt2WTljp/O8wuVDER5Tpb+az971+YPBJJf1ek8F9XcvCuM/djpGbUkmBy+/B+zb8UWV3qfiViGbS39vNg/F+IA==}
     engines: {node: '>= 20.18.0'}
     peerDependencies:
       '@react-native/normalize-colors': '*'
@@ -10163,7 +10163,7 @@ snapshots:
       react: 19.2.3
       react-native: 0.86.3(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/jest-preset@0.86.3(@babel/core@7.29.7(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.3(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.3)(supports-color@8.1.1)
 
-  react-native-unistyles@3.4.0(223de1209a14f7bb424b020bbdd439a1):
+  react-native-unistyles@3.5.2(223de1209a14f7bb424b020bbdd439a1):
     dependencies:
       '@babel/types': 7.29.8
       '@react-native/normalize-colors': 0.86.3
