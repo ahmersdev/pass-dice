@@ -118,20 +118,29 @@ async function clearIfDue(): Promise<void> {
   try {
     const clip = await AppPrivacy.readOwnClip();
 
+    // A newer copy replaced this clear while the clipboard was being read.
+    if (pending?.id !== target.id) {
+      return;
+    }
+
     if (clip.status === "unavailable") {
       // Keep the clear pending; Android may not let a background app read the
-      // clipboard. It is retried shortly and whenever the app is active again.
-      const expired = Date.now() > target.dueAt + RETRY_WINDOW_MS;
-      if (expired || target.retries >= MAX_RETRIES) {
+      // clipboard. It is retried shortly and whenever the app is active again,
+      // so running out of timer retries must not forget it.
+      if (Date.now() > target.dueAt + RETRY_WINDOW_MS) {
         forget(target);
-      } else {
+      } else if (target.retries < MAX_RETRIES) {
         target.retries += 1;
         armTimer(RETRY_DELAY_MS);
       }
       return;
     }
 
-    if (clip.status === "own" && (await matches(target, clip.text))) {
+    if (
+      clip.status === "own" &&
+      (await matches(target, clip.text)) &&
+      pending?.id === target.id
+    ) {
       await AppPrivacy.clearClipboard();
     }
   } catch {

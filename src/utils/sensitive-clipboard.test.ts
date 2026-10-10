@@ -167,8 +167,70 @@ describe("sensitive clipboard", () => {
     app.scheduleClipboardClear(PASSWORD, DELAY_MS, false);
     await advance(DELAY_MS + 60000);
 
-    // One attempt when it comes due plus at most five retries.
-    expect(readOwnClip.mock.calls.length).toBeLessThanOrEqual(6);
+    // One attempt when it comes due plus five retries.
+    expect(readOwnClip).toHaveBeenCalledTimes(6);
+    await advance(60000);
+    expect(readOwnClip).toHaveBeenCalledTimes(6);
+  });
+
+  it("still clears when the app returns after the timer retries ran out", async () => {
+    const app = startApp();
+    const readable = mockPrivacy.api!.readOwnClip;
+    mockPrivacy.api!.readOwnClip = async () => ({ status: "unavailable" });
+
+    app.scheduleClipboardClear(PASSWORD, DELAY_MS, false);
+    await advance(DELAY_MS + 60000);
+    expect(mockPrivacy.clearCalls).toBe(0);
+
+    mockPrivacy.clip = { status: "own", text: PASSWORD };
+    mockPrivacy.api!.readOwnClip = readable;
+    mockAppStateListeners.forEach((listener) => listener("active"));
+    await advance(10);
+
+    expect(mockPrivacy.clearCalls).toBe(1);
+  });
+
+  it("gives up on a clear that stayed unreadable past the retry window", async () => {
+    const app = startApp();
+    const readOwnClip = jest.fn(
+      async (): Promise<IClipRead> => ({ status: "unavailable" }),
+    );
+    mockPrivacy.api!.readOwnClip = readOwnClip;
+
+    app.scheduleClipboardClear(PASSWORD, DELAY_MS, false);
+    await advance(DELAY_MS + 60000);
+    jest.setSystemTime(Date.now() + 11 * 60 * 1000);
+    mockAppStateListeners.forEach((listener) => listener("active"));
+    await advance(10);
+    const callsAfterExpiry = readOwnClip.mock.calls.length;
+
+    mockAppStateListeners.forEach((listener) => listener("active"));
+    await advance(10);
+
+    expect(readOwnClip).toHaveBeenCalledTimes(callsAfterExpiry);
+    expect(mockPrivacy.clearCalls).toBe(0);
+  });
+
+  it("does not let a superseded clear touch a newer copy", async () => {
+    const app = startApp();
+    let finishRead!: (clip: IClipRead) => void;
+    mockPrivacy.api!.readOwnClip = () =>
+      new Promise<IClipRead>((resolve) => {
+        finishRead = resolve;
+      });
+
+    app.scheduleClipboardClear(PASSWORD, DELAY_MS, false);
+    await advance(DELAY_MS + 10);
+
+    const newer = "n3w#Passw0rd&zzXY";
+    mockPrivacy.clip = { status: "own", text: newer };
+    mockPrivacy.api!.readOwnClip = async () => mockPrivacy.clip;
+    app.scheduleClipboardClear(newer, DELAY_MS, false);
+
+    finishRead({ status: "unavailable" });
+    await advance(DELAY_MS + 50);
+
+    expect(mockPrivacy.clearCalls).toBe(1);
   });
 
   describe("after the app is killed", () => {
