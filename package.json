@@ -53,6 +53,7 @@
     "test": "jest"
   },
   "private": true,
+  "packageManager": "pnpm@12.10.1",
   "jest": {
     "preset": "jest-expo",
     "moduleNameMapper": {
