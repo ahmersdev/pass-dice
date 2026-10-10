@@ -6,6 +6,7 @@
     "@expo-google-fonts/bebas-neue": "^0.4.1",
     "@expo-google-fonts/dm-mono": "^0.4.2",
     "@expo-google-fonts/dm-sans": "^0.4.2",
+    "babel-preset-expo": "~57.0.0",
     "expo": "~57.0.26",
     "expo-clipboard": "~57.0.2",
     "expo-constants": "~57.0.20",
