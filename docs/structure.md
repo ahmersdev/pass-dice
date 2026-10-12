@@ -30,7 +30,7 @@ pass-dice/
 ├── babel.config.js       Babel preset plus the Unistyles plugin (root: "src")
 ├── tsconfig.json         TypeScript config and the "@/..." path aliases
 ├── eslint.config.js      Lint config (`npx expo lint`)
-├── assets/               Static files referenced by app.json (app icon, splash, adaptive icon, icon-source.svg master)
+├── assets/               Static files referenced by app.json (app icon, splash, adaptive icon)
 ├── docs/                 Project documentation (this folder)
 ├── modules/              Local native modules (Android privacy helper)
 └── src/                  All application code
@@ -153,12 +153,13 @@ Native code only changes with a new development build (`npx expo run:android`).
 
 ### App icon
 
-The icon is a red die on near-black with a keyhole as the centre pip. `assets/icon-source.svg` is the vector master (100-unit grid, die 64 wide). The files in `assets/images/` and `assets/expo.icon/` are all rendered from it with the same proportions:
+The icon is a glowing red die with a lock, orbited by four character coins (`A`, `a`, `#`, `1`), on near-black `#0D0C0C`. The artwork is transparent with no baked-in background or border, and the files in `assets/images/` and `assets/expo.icon/` all use it:
 
-- `icon.png`: 1024 px, opaque, die at 64% of the width.
-- `android-icon-foreground.png`, `android-icon-background.png`, `android-icon-monochrome.png`: 1024 px adaptive layers. The die is 49% of the width so it stays inside the circular safe zone. The background is solid `#0D0C0C`; the monochrome layer is a white die with the pips and keyhole cut out.
-- `splash-icon.png`: transparent, die at 80% of the width, shown on the `#0D0C0C` splash colour at `imageWidth` 160.
-- `expo.icon/`: the iOS Icon Composer bundle, with `Assets/die.png` over a dark solid fill.
+- `icon.png`: 1024 px, opaque, art at 80% of the width on `#0D0C0C`.
+- `android-icon-foreground.png`: transparent art at 62% of the width, inside the adaptive-icon safe zone. `android-icon-background.png` is solid `#0D0C0C`.
+- `android-icon-monochrome.png`: themed-icon layer at 62% of the width. Android tints it by alpha only, so the die body is semi-transparent and the lock, letters and coin rims are solid.
+- `splash-icon.png`: transparent art filling the canvas, shown on the `#0D0C0C` splash colour at `imageWidth` 160.
+- `expo.icon/`: the iOS Icon Composer bundle, with `Assets/die.png` (transparent art) over a dark solid fill.
 
 Icon changes need a new native build to show up.
 
