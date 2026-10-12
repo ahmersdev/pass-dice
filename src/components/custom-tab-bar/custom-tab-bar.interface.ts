@@ -1,3 +1,3 @@
-import type { BottomTabBarProps } from "expo-router/build/react-navigation/bottom-tabs";
+import type { BottomTabBarProps } from "expo-router/tabs";
 
-export type ICustomTabBarProps = BottomTabBarProps;
+export type ICustomTabBarProps = Pick<BottomTabBarProps, "state" | "navigation">;

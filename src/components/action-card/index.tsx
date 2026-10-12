@@ -43,6 +43,8 @@ export default function ActionCard(props: IActionCardProps) {
       activeOpacity={0.7}
       disabled={disabled}
       onPress={onPress}
+      accessibilityRole="button"
+      accessibilityState={{ disabled }}
       style={disabled && actionCardStyles.disabled}
     >
       {content}

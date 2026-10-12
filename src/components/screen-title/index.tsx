@@ -7,7 +7,9 @@ export default function ScreenTitle(props: IScreenTitleProps) {
 
   return (
     <View style={screenTitleStyles.container}>
-      <Text style={screenTitleStyles.title}>{title}</Text>
+      <Text accessibilityRole="header" style={screenTitleStyles.title}>
+        {title}
+      </Text>
       {children}
     </View>
   );

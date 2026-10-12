@@ -5,13 +5,15 @@ import { customSwitchStyles } from "./custom-switch.styles";
 import useCustomSwitch from "./use-custom-switch";
 
 export default function CustomSwitch(props: ICustomSwitchProps) {
-  const { value } = props;
+  const { value, accessibilityLabel } = props;
 
-  const { thumbStyle, toggleSwitch } = useCustomSwitch(props);
+  const { toggleSwitch, thumbStyle } = useCustomSwitch(props);
 
   return (
     <Pressable
       accessibilityRole="switch"
+      accessibilityLabel={accessibilityLabel}
+      hitSlop={{ top: 10, bottom: 10 }}
       accessibilityState={{ checked: value }}
       onPress={toggleSwitch}
       style={customSwitchStyles.track(value)}

@@ -2,26 +2,34 @@ import { useEffect } from "react";
 import {
   useAnimatedStyle,
   useSharedValue,
-  withTiming,
+  withSpring,
 } from "react-native-reanimated";
 import { ICustomSwitchProps } from "./custom-switch.interface";
 
-const TRAVEL = 18;
+const THUMB_TRAVEL = 18;
 
 export default function useCustomSwitch(props: ICustomSwitchProps) {
   const { value, onValueChange } = props;
 
-  const offset = useSharedValue(value ? TRAVEL : 0);
+  // Starts at the right spot so the thumb does not slide in on first render.
+  const translateX = useSharedValue(value ? THUMB_TRAVEL : 0);
 
+  // Follows `value`, so changes made outside the switch move the thumb too.
   useEffect(() => {
-    offset.value = withTiming(value ? TRAVEL : 0, { duration: 180 });
-  }, [value, offset]);
-
-  const thumbStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: offset.value }],
-  }));
+    translateX.value = withSpring(value ? THUMB_TRAVEL : 0, {
+      damping: 15,
+      stiffness: 200,
+    });
+  }, [value, translateX]);
 
   const toggleSwitch = () => onValueChange(!value);
 
-  return { thumbStyle, toggleSwitch };
+  const thumbStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: translateX.value }],
+  }));
+
+  return {
+    toggleSwitch,
+    thumbStyle,
+  };
 }

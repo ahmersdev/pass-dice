@@ -25,7 +25,7 @@ const lightTheme = {
     background: "#FDFDFD",
     backgroundSecondary: "#F0F0F0",
     text: "#121212",
-    textSecondary: "#12121280",
+    textSecondary: "#12121299",
     onPrimary: "#FDFDFD",
     digit: "#b63331",
     symbol: "#B45309",

@@ -1,6 +1,6 @@
 import { View, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useBottomTabBarHeight } from "expo-router/build/react-navigation/bottom-tabs";
+import { useBottomTabBarHeight } from "expo-router/tabs";
 import { ScreenTitle } from "@/components";
 import { ITabsLayoutProps } from "./tabs.interface";
 import { tabsStyles } from "./tabs.styles";
@@ -20,6 +20,7 @@ export default function TabsLayout(props: ITabsLayoutProps) {
         <ScrollView
           contentContainerStyle={tabsStyles.contentContainer(tabBarHeight)}
           showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
         >
           {children}
         </ScrollView>

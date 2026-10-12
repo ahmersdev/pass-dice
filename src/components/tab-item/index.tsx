@@ -15,6 +15,9 @@ export default function TabItem(props: ITabItemProps) {
   return (
     <Pressable
       onPress={onPress}
+      accessibilityRole="tab"
+      accessibilityLabel={label}
+      accessibilityState={{ selected: isFocused }}
       android_ripple={{ color: "transparent" }}
       style={tabItemStyles.container}
     >
