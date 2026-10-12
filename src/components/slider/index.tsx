@@ -1,10 +1,9 @@
 import { View } from "react-native";
 import { GestureDetector } from "react-native-gesture-handler";
+import { SLIDER_ACCESSIBILITY_ACTIONS } from "./slider.data";
 import { ISliderProps } from "./slider.interface";
 import { sliderStyles } from "./slider.styles";
 import useSlider from "./use-slider";
-
-const ACCESSIBILITY_ACTIONS = [{ name: "increment" }, { name: "decrement" }];
 
 export default function Slider(props: ISliderProps) {
   const { value, min, max, accessibilityLabel } = props;
@@ -19,7 +18,7 @@ export default function Slider(props: ISliderProps) {
         accessibilityRole="adjustable"
         accessibilityLabel={accessibilityLabel}
         accessibilityValue={{ min, max, now: value }}
-        accessibilityActions={ACCESSIBILITY_ACTIONS}
+        accessibilityActions={SLIDER_ACCESSIBILITY_ACTIONS}
         onAccessibilityAction={onAccessibilityAction}
         onLayout={onLayout}
         style={sliderStyles.container}

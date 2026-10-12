@@ -1,31 +1,19 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Platform } from "react-native";
 import { getAvailablePurchases, useIAP } from "expo-iap";
-import Toast from "react-native-toast-message";
 import type { Purchase } from "expo-iap";
-import { HELP_ME_PRODUCTS } from "./help-me.data";
 import {
   getErrorMessage,
   HELP_ME_SKUS,
   isHelpMeProductId,
   isUserCancelledError,
+  showError,
+  showSuccess,
 } from "./help-me.utils";
 import type {
   IHelpMeProductDetails,
   IUseHelpMeReturn,
 } from "./help-me.interface";
-
-const showError = (message: string) => {
-  Toast.show({ type: "error", text1: message });
-};
-
-const showSuccess = (productId: string) => {
-  const tier = HELP_ME_PRODUCTS.find((product) => product.id === productId);
-  Toast.show({
-    type: "success",
-    text1: tier?.successMessage ?? "Thank you for your support!",
-  });
-};
 
 export default function useHelpMe(): IUseHelpMeReturn {
   const isAvailable = Platform.OS === "android";

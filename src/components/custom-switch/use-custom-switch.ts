@@ -4,9 +4,8 @@ import {
   useSharedValue,
   withSpring,
 } from "react-native-reanimated";
+import { THUMB_TRAVEL } from "./custom-switch.data";
 import { ICustomSwitchProps } from "./custom-switch.interface";
-
-const THUMB_TRAVEL = 18;
 
 export default function useCustomSwitch(props: ICustomSwitchProps) {
   const { value, onValueChange } = props;

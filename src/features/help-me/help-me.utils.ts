@@ -1,5 +1,6 @@
 import { ErrorCode } from "expo-iap";
-import { HELP_ME_PRODUCT_IDS } from "./help-me.data";
+import Toast from "react-native-toast-message";
+import { HELP_ME_PRODUCT_IDS, HELP_ME_PRODUCTS } from "./help-me.data";
 
 export const HELP_ME_SKUS = Object.values(HELP_ME_PRODUCT_IDS);
 
@@ -31,4 +32,16 @@ export const getErrorMessage = (error: unknown): string => {
   }
 
   return UNKNOWN_ERROR_MESSAGE;
+};
+
+export const showError = (message: string) => {
+  Toast.show({ type: "error", text1: message });
+};
+
+export const showSuccess = (productId: string) => {
+  const tier = HELP_ME_PRODUCTS.find((product) => product.id === productId);
+  Toast.show({
+    type: "success",
+    text1: tier?.successMessage ?? "Thank you for your support!",
+  });
 };

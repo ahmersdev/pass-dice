@@ -1,8 +1,7 @@
 import { Text, View } from "react-native";
+import { STRENGTH_SEGMENTS } from "./strength-meter.data";
 import { IStrengthMeterProps } from "./strength-meter.interface";
 import { strengthMeterStyles } from "./strength-meter.styles";
-
-const SEGMENTS = [1, 2, 3, 4];
 
 export default function StrengthMeter(props: IStrengthMeterProps) {
   const { level, label } = props;
@@ -14,7 +13,7 @@ export default function StrengthMeter(props: IStrengthMeterProps) {
       style={strengthMeterStyles.container}
     >
       <View style={strengthMeterStyles.segments}>
-        {SEGMENTS.map((segment) => (
+        {STRENGTH_SEGMENTS.map((segment) => (
           <View
             key={segment}
             style={strengthMeterStyles.segment(level, segment <= level)}

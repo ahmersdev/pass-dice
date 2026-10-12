@@ -1,3 +1,4 @@
+import { SecureRandomError, secureRandomInt } from "@/utils/secure-random";
 import {
   CHARACTER_OPTIONS,
   CHARACTER_SETS,
@@ -99,4 +100,21 @@ export const getPasswordStrength = (
 
   const step = STRENGTH_STEPS.find((candidate) => bits < candidate.maxBits);
   return step ? step.strength : STRENGTH_MAX;
+};
+
+// Returns null when the secure random generator fails. There is deliberately
+// no fallback to a weaker source; the screen shows an error instead.
+export const createPassword = (
+  length: number,
+  selection: ICharacterSelection,
+): string | null => {
+  try {
+    return generatePassword(length, selection, secureRandomInt);
+  } catch (error) {
+    if (error instanceof SecureRandomError) {
+      return null;
+    }
+
+    throw error;
+  }
 };

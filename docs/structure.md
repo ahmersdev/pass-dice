@@ -60,7 +60,7 @@ Every file here is a route. Keep them thin: a route file only renders the matchi
 app/
 ├── _layout.tsx          Theme import, then renders layouts/root (RootLayout)
 └── (tabs)/
-    ├── _layout.tsx      Tabs navigator using the custom tab bar
+    ├── _layout.tsx      `TabsNavigator`: tabs navigator using the custom tab bar
     ├── index.tsx        Generator tab   -> features/generator
     ├── help-me.tsx      Help Me tab     -> features/help-me
     └── settings.tsx     Settings tab    -> features/settings
@@ -80,9 +80,9 @@ A feature folder holds everything for one screen:
 | `<feature>.styles.ts` | Unistyles styles |
 
 Create only the files a feature needs. Examples:
-- `settings/`: `index.tsx`, `use-settings.ts` (theme toggle and saving), `settings.data.ts` (contact links), `settings.styles.ts`.
-- `help-me/`: `index.tsx`, `use-help-me.ts` (store connection, purchases and the success and error toasts), `help-me.data.ts` (tip tiers), `help-me.interface.ts`, `help-me.utils.ts`. It has no styles file because it borrows `actionCardStyles` from the barrel.
-- `generator/`: the password generator. `use-generator.ts` holds the state (length, selected character types, password) and the copy action, `generator.utils.ts` has `generatePassword` and `getPasswordStrength`, `generator.data.ts` has the character sets, length limits (8 to 64, default 16) and strength thresholds.
+- `settings/`: `index.tsx`, `use-settings.ts` (theme toggle and saving), `settings.interface.ts`, `settings.data.ts` (contact links), `settings.styles.ts`.
+- `help-me/`: `index.tsx`, `use-help-me.ts` (store connection, purchases and the success and error toasts), `help-me.data.ts` (tip tiers), `help-me.interface.ts`, `help-me.utils.ts` (including the `showError` and `showSuccess` toasts). It has no styles file because it borrows `actionCardStyles` from the barrel.
+- `generator/`: the password generator. `use-generator.ts` holds the state (length, selected character types, password) and the copy action, `generator.utils.ts` has `createPassword`, `generatePassword` and `getPasswordStrength`, `generator.data.ts` has the character sets, length limits (8 to 64, default 16) and strength thresholds.
 
 ### `components/` (reusable UI)
 
@@ -99,6 +99,7 @@ Add `use-<name>.ts` when the component has logic (state, animation, handlers) an
 - `custom-switch/`: animation and toggle logic live in `use-custom-switch.ts`.
 - `custom-tab-bar/`: `use-custom-tab-bar.ts` (pill animation, press handling) and `custom-tab-bar.utils.ts` (the tab list: icon and label per route).
 - `tab-item/`: a single tab, with its own hook for the label animation.
+- `app-icon/`, `slider/`, `strength-meter/` and `custom-switch/` keep their static constants in `<name>.data.ts`.
 - `app-icon/`: renders any Lucide-style icon at a given size, color and stroke width.
 - `action-card/`, `card/`, `screen-title/`, `short-heading/`: small building blocks.
 - `section-card/`, `password-text/`, `strength-meter/`, `button/`, `icon-button/`, `checkbox-row/`, `slider/`: the pieces of the Generator screen. `slider/` is a custom draggable slider built on gesture handler; its drag logic is in `use-slider.ts`.
@@ -166,7 +167,7 @@ Icon changes need a new native build to show up.
 ### `constants/`
 
 - `routes.ts`: `ROUTE_NAMES` (route file names) and `PAGE_TITLES` (the heading and tab label for each page).
-- `layout.ts`: tab bar height and margin, and `getTabBarBottomInset`.
+- `layout.ts`: tab bar height and margin, `getTabBarBottomInset` and `getTabBarStyle` (the navigator's tab bar style).
 
 ### `theme/unistyles.ts`
 

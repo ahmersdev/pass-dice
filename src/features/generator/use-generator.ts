@@ -6,7 +6,6 @@ import {
   copySensitiveText,
   scheduleClipboardClear,
 } from "@/utils/sensitive-clipboard";
-import { SecureRandomError, secureRandomInt } from "@/utils/secure-random";
 import {
   CLIPBOARD_CLEAR_MS,
   DEFAULT_LENGTH,
@@ -17,31 +16,13 @@ import {
 } from "./generator.data";
 import type {
   ICharacterSetKey,
-  ICharacterSelection,
   IUseGeneratorReturn,
 } from "./generator.interface";
 import {
   countSelected,
-  generatePassword,
+  createPassword,
   getPasswordStrength,
 } from "./generator.utils";
-
-// Returns null when the secure random generator fails. There is deliberately
-// no fallback to a weaker source; the screen shows an error instead.
-const createPassword = (
-  length: number,
-  selection: ICharacterSelection,
-): string | null => {
-  try {
-    return generatePassword(length, selection, secureRandomInt);
-  } catch (error) {
-    if (error instanceof SecureRandomError) {
-      return null;
-    }
-
-    throw error;
-  }
-};
 
 export default function useGenerator(): IUseGeneratorReturn {
   const [length, setLength] = useState(DEFAULT_LENGTH);
