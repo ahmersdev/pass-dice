@@ -58,7 +58,7 @@ Every file here is a route. Keep them thin: a route file only renders the matchi
 
 ```
 app/
-├── _layout.tsx          Theme import, then renders layouts/root (RootLayout)
+├── _layout.tsx          Theme import, then renders layouts/root (RootLayout); re-exports expo-router's `ErrorBoundary` so a render error shows a retry screen instead of crashing
 └── (tabs)/
     ├── _layout.tsx      `TabsNavigator`: tabs navigator using the custom tab bar
     ├── index.tsx        Generator tab   -> features/generator
