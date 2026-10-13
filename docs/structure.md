@@ -99,7 +99,7 @@ Add `use-<name>.ts` when the component has logic (state, animation, handlers) an
 - `custom-switch/`: animation and toggle logic live in `use-custom-switch.ts`.
 - `custom-tab-bar/`: `use-custom-tab-bar.ts` (pill animation, press handling) and `custom-tab-bar.utils.ts` (the tab list: icon and label per route).
 - `tab-item/`: a single tab, with its own hook for the label animation.
-- `app-icon/`, `slider/`, `strength-meter/` and `custom-switch/` keep their static constants in `<name>.data.ts`.
+- `app-icon/`, `slider/`, `strength-meter/`, `custom-switch/`, `tab-item/` and `password-text/` keep their static constants in `<name>.data.ts`.
 - `app-icon/`: renders any Lucide-style icon at a given size, color and stroke width.
 - `action-card/`, `card/`, `screen-title/`, `short-heading/`: small building blocks.
 - `section-card/`, `password-text/`, `strength-meter/`, `button/`, `icon-button/`, `checkbox-row/`, `slider/`: the pieces of the Generator screen. `slider/` is a custom draggable slider built on gesture handler; its drag logic is in `use-slider.ts`.

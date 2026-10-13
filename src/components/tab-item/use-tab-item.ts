@@ -3,6 +3,7 @@ import {
   interpolate,
   useAnimatedStyle,
 } from "react-native-reanimated";
+import { MAX_LABEL_WIDTH } from "./tab-item.data";
 import { ITabItemProps } from "./tab-item.interface";
 
 export default function useTabItem(props: ITabItemProps) {
@@ -15,16 +16,12 @@ export default function useTabItem(props: ITabItemProps) {
 
     const targetX = tabIndex * tabWidth;
     const diff = Math.abs(pillX.value - targetX);
-    const opacity = interpolate(
-      diff,
-      [0, tabWidth * 0.25],
-      [1, 0],
-      Extrapolation.CLAMP,
-    );
+    const fadeRange = [0, tabWidth * 0.25];
+    const opacity = interpolate(diff, fadeRange, [1, 0], Extrapolation.CLAMP);
     const maxWidth = interpolate(
       diff,
-      [0, tabWidth * 0.25],
-      [120, 0],
+      fadeRange,
+      [MAX_LABEL_WIDTH, 0],
       Extrapolation.CLAMP,
     );
     return { opacity, maxWidth };

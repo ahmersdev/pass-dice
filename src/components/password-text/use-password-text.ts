@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react";
 import { useReducedMotion } from "react-native-reanimated";
+import { INITIAL_STATE } from "./password-text.data";
 import type {
   IDisplayCharacter,
   IPasswordTextProps,
-  IScrambleState,
 } from "./password-text.interface";
 import { getNoise, getTickMs } from "./password-text.utils";
-
-const INITIAL_STATE: IScrambleState = { key: -1, settled: 0, noise: "" };
 
 // On regenerate, every position shows random characters that lock into the
 // real password one at a time from left to right.
