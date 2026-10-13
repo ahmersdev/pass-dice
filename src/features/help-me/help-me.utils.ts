@@ -11,7 +11,7 @@ export const isHelpMeProductId = (productId: string): boolean =>
 
 export const isUserCancelledError = (error: unknown): boolean => {
   if (error && typeof error === "object" && "code" in error) {
-    return (error as { code?: string }).code === ErrorCode.UserCancelled;
+    return error.code === ErrorCode.UserCancelled;
   }
 
   return false;
@@ -25,9 +25,8 @@ export const getErrorMessage = (error: unknown): string => {
   }
 
   if (error && typeof error === "object" && "message" in error) {
-    const { message } = error as { message?: unknown };
-    if (typeof message === "string") {
-      return message;
+    if (typeof error.message === "string") {
+      return error.message;
     }
   }
 

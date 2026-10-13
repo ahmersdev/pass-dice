@@ -14,7 +14,8 @@ import * as SplashScreen from "expo-splash-screen";
 import { useUnistyles } from "react-native-unistyles";
 import { resumeClipboardClear } from "@/utils/sensitive-clipboard";
 
-SplashScreen.preventAutoHideAsync();
+// A failed splash call must not become an unhandled rejection; the app still runs.
+SplashScreen.preventAutoHideAsync().catch(() => undefined);
 
 export default function useRootLayout() {
   const { rt } = useUnistyles();
@@ -34,7 +35,7 @@ export default function useRootLayout() {
 
   useEffect(() => {
     if (loaded || error) {
-      SplashScreen.hideAsync();
+      SplashScreen.hideAsync().catch(() => undefined);
     }
   }, [loaded, error]);
 
