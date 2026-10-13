@@ -9,4 +9,4 @@ export const PAGE_TITLES = {
   GENERATOR: "Generator",
   HELP_ME: "Help Me",
   SETTINGS: "Settings",
-};
+} as const;

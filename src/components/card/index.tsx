@@ -1,6 +1,6 @@
 import { View } from "react-native";
-import { cardStyles } from "./card.styles";
 import { ICardProps } from "./card.interface";
+import { cardStyles } from "./card.styles";
 
 export default function Card(props: ICardProps) {
   const { children } = props;

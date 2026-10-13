@@ -1,15 +1,18 @@
-import { ITabItemProps } from "./tab-item.interface";
 import {
-  useAnimatedStyle,
-  interpolate,
   Extrapolation,
+  interpolate,
+  useAnimatedStyle,
 } from "react-native-reanimated";
+import { ITabItemProps } from "./tab-item.interface";
 
 export default function useTabItem(props: ITabItemProps) {
   const { pillX, tabIndex, tabWidth } = props;
 
   const labelWrapperStyle = useAnimatedStyle(() => {
-    if (tabWidth === 0) return { opacity: 0, maxWidth: 0 };
+    if (tabWidth === 0) {
+      return { opacity: 0, maxWidth: 0 };
+    }
+
     const targetX = tabIndex * tabWidth;
     const diff = Math.abs(pillX.value - targetX);
     const opacity = interpolate(

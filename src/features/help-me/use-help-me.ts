@@ -161,15 +161,13 @@ export default function useHelpMe(): IUseHelpMeReturn {
 
   const purchase = useCallback(
     async (productId: string) => {
-      if (!isAvailable) {
-        return;
-      }
-
-      if (!connected || isProductsLoading || purchasingProductIdRef.current) {
-        return;
-      }
-
-      if (!productsById[productId]) {
+      if (
+        !isAvailable ||
+        !connected ||
+        isProductsLoading ||
+        purchasingProductIdRef.current ||
+        !productsById[productId]
+      ) {
         return;
       }
 

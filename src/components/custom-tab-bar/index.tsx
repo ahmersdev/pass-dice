@@ -2,12 +2,12 @@ import { View } from "react-native";
 import Animated from "react-native-reanimated";
 import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import TabItem from "../tab-item";
 import { TAB_BAR_MARGIN } from "@/constants/layout";
+import TabItem from "../tab-item";
 import { ICustomTabBarProps } from "./custom-tab-bar.interface";
 import { customTabBarStyles } from "./custom-tab-bar.styles";
-import useCustomTabBar from "./use-custom-tab-bar";
 import { TAB_CONFIG } from "./custom-tab-bar.utils";
+import useCustomTabBar from "./use-custom-tab-bar";
 
 export default function CustomTabBar(props: ICustomTabBarProps) {
   const { state } = props;
@@ -47,7 +47,9 @@ export default function CustomTabBar(props: ICustomTabBarProps) {
 
       {state.routes.map((route, index) => {
         const config = TAB_CONFIG[route.name];
-        if (!config) return null;
+        if (!config) {
+          return null;
+        }
 
         const isFocused = state.index === index;
 

@@ -1,5 +1,5 @@
-import { IAppIcon } from "@/components/app-icon/app-icon.interface";
-import { SharedValue } from "react-native-reanimated";
+import type { SharedValue } from "react-native-reanimated";
+import type { IAppIcon } from "@/components/app-icon/app-icon.interface";
 
 export interface ITabItemProps {
   icon: IAppIcon;

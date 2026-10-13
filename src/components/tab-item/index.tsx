@@ -1,10 +1,10 @@
-import { ITabItemProps } from "./tab-item.interface";
 import { Pressable } from "react-native";
+import Animated from "react-native-reanimated";
 import { useUnistyles } from "react-native-unistyles";
 import AppIcon from "../app-icon";
-import Animated from "react-native-reanimated";
-import useTabItem from "./use-tab-item";
+import { ITabItemProps } from "./tab-item.interface";
 import { tabItemStyles } from "./tab-item.styles";
+import useTabItem from "./use-tab-item";
 
 export default function TabItem(props: ITabItemProps) {
   const { icon, label, isFocused, onPress } = props;

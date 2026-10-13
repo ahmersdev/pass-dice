@@ -1,7 +1,7 @@
 import { Pressable, Text, View } from "react-native";
 import { useUnistyles } from "react-native-unistyles";
-import AppIcon from "../app-icon";
 import Check from "lucide-react-native/icons/check";
+import AppIcon from "../app-icon";
 import { ICheckboxRowProps } from "./checkbox-row.interface";
 import { checkboxRowStyles } from "./checkbox-row.styles";
 
