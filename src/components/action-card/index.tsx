@@ -13,6 +13,7 @@ export default function ActionCard(props: IActionCardProps) {
     onPress,
     disabled = false,
     trailing,
+    accessibilityRole = "button",
   } = props;
 
   const { theme } = useUnistyles();
@@ -43,7 +44,7 @@ export default function ActionCard(props: IActionCardProps) {
       activeOpacity={0.7}
       disabled={disabled}
       onPress={onPress}
-      accessibilityRole="button"
+      accessibilityRole={accessibilityRole}
       accessibilityState={{ disabled }}
       style={disabled && actionCardStyles.disabled}
     >

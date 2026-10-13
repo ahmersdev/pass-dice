@@ -68,6 +68,7 @@ export default function useGenerator(): IUseGeneratorReturn {
     setRegenerateCount((count) => count + 1);
     setAnimatePassword(true);
     setPassword(createPassword(length, selection));
+    AccessibilityInfo.announceForAccessibility("New password generated");
   };
 
   const copyPassword = async () => {
@@ -92,6 +93,7 @@ export default function useGenerator(): IUseGeneratorReturn {
       AccessibilityInfo.announceForAccessibility("Password copied");
     } catch {
       Toast.show({ type: "error", text1: "Couldn't copy the password" });
+      AccessibilityInfo.announceForAccessibility("Couldn't copy the password");
     }
   };
 

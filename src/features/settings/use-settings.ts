@@ -1,4 +1,4 @@
-import { Linking } from "react-native";
+import { AccessibilityInfo, Linking } from "react-native";
 import Toast from "react-native-toast-message";
 import { UnistylesRuntime, useUnistyles } from "react-native-unistyles";
 import { mmkvStorage, THEME_STORAGE_KEY } from "@/theme/unistyles";
@@ -19,6 +19,7 @@ export default function useSettings(): IUseSettingsReturn {
       await Linking.openURL(url);
     } catch {
       Toast.show({ type: "error", text1: "Couldn't open the link" });
+      AccessibilityInfo.announceForAccessibility("Couldn't open the link");
     }
   };
 
