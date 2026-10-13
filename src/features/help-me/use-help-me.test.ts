@@ -5,7 +5,11 @@ import Toast from "react-native-toast-message";
 import useHelpMe from "./use-help-me";
 
 jest.mock("expo-iap", () => ({
-  ErrorCode: { UserCancelled: "user-cancelled", NetworkError: "network-error" },
+  ErrorCode: {
+    UserCancelled: "user-cancelled",
+    NetworkError: "network-error",
+    Pending: "pending",
+  },
   getAvailablePurchases: jest.fn(),
   useIAP: jest.fn(),
 }));
@@ -106,6 +110,53 @@ describe("useHelpMe", () => {
 
     expect(finishTransaction).toHaveBeenCalledTimes(1);
     expect(mockGetAvailablePurchases).toHaveBeenCalledTimes(1);
+  });
+
+  it("retries pending purchases after a failed fetch", async () => {
+    mockGetAvailablePurchases.mockRejectedValueOnce(new Error("offline"));
+    jest.spyOn(console, "warn").mockImplementation(() => undefined);
+    const left = { productId: "tip_lunch" };
+    mockGetAvailablePurchases.mockResolvedValueOnce([left]);
+    const { result, rerender } = await setup();
+    await waitFor(() => expect(result.current.isProductsLoading).toBe(false));
+    expect(finishTransaction).not.toHaveBeenCalled();
+
+    mockUseIAP.mockImplementation((options: IIapOptions) => {
+      iapOptions = options;
+      return {
+        connected: true,
+        products,
+        fetchProducts: jest.fn().mockResolvedValue(undefined),
+        requestPurchase,
+        finishTransaction,
+      };
+    });
+    rerender({});
+
+    await waitFor(() => expect(finishTransaction).toHaveBeenCalledTimes(1));
+  });
+
+  it("releases the purchase lock for a deferred payment without consuming it", async () => {
+    const { result } = await setup();
+    await waitFor(() => expect(result.current.isProductsLoading).toBe(false));
+
+    await act(async () => {
+      await result.current.purchase("tip_coffee");
+    });
+    expect(result.current.purchasingProductId).toBe("tip_coffee");
+
+    await act(async () => {
+      await iapOptions.onPurchaseSuccess({
+        productId: "tip_coffee",
+        purchaseState: "pending",
+      } as never);
+    });
+
+    expect(result.current.purchasingProductId).toBeNull();
+    expect(finishTransaction).not.toHaveBeenCalled();
+    expect(mockToastShow).toHaveBeenCalledWith(
+      expect.objectContaining({ type: "info" }),
+    );
   });
 
   it("requests a known product and ignores a second purchase while one is running", async () => {

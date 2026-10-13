@@ -18,6 +18,12 @@ export const isUserCancelledError = (error: unknown): boolean => {
   return false;
 };
 
+export const isPendingError = (error: unknown): boolean =>
+  !!error &&
+  typeof error === "object" &&
+  "code" in error &&
+  error.code === ErrorCode.Pending;
+
 const UNKNOWN_ERROR_MESSAGE = "An unexpected error occurred";
 
 export const getErrorMessage = (error: unknown): string => {
@@ -43,5 +49,11 @@ export const showSuccess = (productId: string) => {
   const tier = HELP_ME_PRODUCTS.find((product) => product.id === productId);
   const message = tier?.successMessage ?? "Thank you for your support!";
   Toast.show({ type: "success", text1: message });
+  AccessibilityInfo.announceForAccessibility(message);
+};
+
+export const showPending = () => {
+  const message = "Your payment is pending. It will complete once approved.";
+  Toast.show({ type: "info", text1: message });
   AccessibilityInfo.announceForAccessibility(message);
 };

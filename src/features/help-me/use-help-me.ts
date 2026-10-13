@@ -6,8 +6,10 @@ import {
   getErrorMessage,
   HELP_ME_SKUS,
   isHelpMeProductId,
+  isPendingError,
   isUserCancelledError,
   showError,
+  showPending,
   showSuccess,
 } from "./help-me.utils";
 import type {
@@ -36,7 +38,9 @@ export default function useHelpMe(): IUseHelpMeReturn {
 
   const handlePurchaseError = useCallback(
     (purchaseError: unknown) => {
-      if (!isUserCancelledError(purchaseError)) {
+      if (isPendingError(purchaseError)) {
+        showPending();
+      } else if (!isUserCancelledError(purchaseError)) {
         showError(getErrorMessage(purchaseError));
       }
 
@@ -54,6 +58,13 @@ export default function useHelpMe(): IUseHelpMeReturn {
   } = useIAP({
     onPurchaseSuccess: async (purchase: Purchase) => {
       if (!isHelpMeProductId(purchase.productId)) {
+        return;
+      }
+
+      // A deferred payment is not complete yet; it is consumed once it clears.
+      if (purchase.purchaseState === "pending") {
+        showPending();
+        setPurchasingProductIdState(null);
         return;
       }
 
@@ -112,6 +123,7 @@ export default function useHelpMe(): IUseHelpMeReturn {
         try {
           await finishTransaction({ purchase, isConsumable: true });
         } catch (pendingError) {
+          hasConsumedPendingRef.current = false;
           console.warn(
             "[useHelpMe] Failed to consume pending purchase:",
             pendingError,
@@ -119,6 +131,8 @@ export default function useHelpMe(): IUseHelpMeReturn {
         }
       }
     } catch (pendingError) {
+      // Allow another attempt, so an owned consumable cannot block buying again.
+      hasConsumedPendingRef.current = false;
       console.warn(
         "[useHelpMe] Failed to fetch pending purchases:",
         pendingError,
