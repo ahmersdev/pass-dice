@@ -27,6 +27,32 @@ export default function useHelpMe(): IUseHelpMeReturn {
 
   const purchasingProductIdRef = useRef<string | null>(null);
   const hasConsumedPendingRef = useRef(false);
+  const finishingTokensRef = useRef(new Set<string>());
+
+  // Completes a purchase once, even if the purchase listener and the startup
+  // sweep both see the same one.
+  const finishOnce = useCallback(
+    async (
+      purchase: Purchase,
+      finish: (purchase: Purchase) => Promise<void>,
+    ) => {
+      const token = purchase.purchaseToken ?? purchase.id;
+
+      if (finishingTokensRef.current.has(token)) {
+        return false;
+      }
+
+      finishingTokensRef.current.add(token);
+
+      try {
+        await finish(purchase);
+        return true;
+      } finally {
+        finishingTokensRef.current.delete(token);
+      }
+    },
+    [],
+  );
 
   const setPurchasingProductIdState = useCallback(
     (productId: string | null) => {
@@ -61,7 +87,6 @@ export default function useHelpMe(): IUseHelpMeReturn {
         return;
       }
 
-      // A deferred payment is not complete yet; it is consumed once it clears.
       if (purchase.purchaseState === "pending") {
         showPending();
         setPurchasingProductIdState(null);
@@ -69,14 +94,15 @@ export default function useHelpMe(): IUseHelpMeReturn {
       }
 
       try {
-        await finishTransaction({ purchase, isConsumable: true });
-        showSuccess(purchase.productId);
-      } catch (finishError) {
-        showError(
-          finishError instanceof Error
-            ? finishError.message
-            : "Failed to complete purchase",
+        const finished = await finishOnce(purchase, (item) =>
+          finishTransaction({ purchase: item, isConsumable: true }),
         );
+
+        if (finished) {
+          showSuccess(purchase.productId);
+        }
+      } catch (finishError) {
+        showError(getErrorMessage(finishError));
       } finally {
         setPurchasingProductIdState(null);
       }
@@ -110,20 +136,24 @@ export default function useHelpMe(): IUseHelpMeReturn {
       return;
     }
 
-    hasConsumedPendingRef.current = true;
-
     try {
       const pendingPurchases = await getAvailablePurchases();
 
+      hasConsumedPendingRef.current = true;
+
       for (const purchase of pendingPurchases) {
-        if (!isHelpMeProductId(purchase.productId)) {
+        if (
+          !isHelpMeProductId(purchase.productId) ||
+          purchase.purchaseState === "pending"
+        ) {
           continue;
         }
 
         try {
-          await finishTransaction({ purchase, isConsumable: true });
+          await finishOnce(purchase, (item) =>
+            finishTransaction({ purchase: item, isConsumable: true }),
+          );
         } catch (pendingError) {
-          hasConsumedPendingRef.current = false;
           console.warn(
             "[useHelpMe] Failed to consume pending purchase:",
             pendingError,
@@ -131,14 +161,12 @@ export default function useHelpMe(): IUseHelpMeReturn {
         }
       }
     } catch (pendingError) {
-      // Allow another attempt, so an owned consumable cannot block buying again.
-      hasConsumedPendingRef.current = false;
       console.warn(
         "[useHelpMe] Failed to fetch pending purchases:",
         pendingError,
       );
     }
-  }, [finishTransaction, isAvailable]);
+  }, [finishOnce, finishTransaction, isAvailable]);
 
   useEffect(() => {
     if (!isAvailable || !connected) {
