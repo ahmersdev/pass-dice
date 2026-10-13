@@ -22,7 +22,6 @@ export default function useCustomTabBar(props: ICustomTabBarProps) {
   const onLayout = (e: LayoutChangeEvent) => {
     const width = e.nativeEvent.layout.width;
     setTabBarWidth(width);
-    // Set pill position instantly on first layout without animation
     pillX.value = state.index * (width / tabCount);
   };
 
