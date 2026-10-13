@@ -18,7 +18,7 @@ export default function CustomSwitch(props: ICustomSwitchProps) {
       onPress={toggleSwitch}
       style={customSwitchStyles.track(value)}
     >
-      <Animated.View style={[customSwitchStyles.thumb, thumbStyle]} />
+      <Animated.View style={[customSwitchStyles.thumb(value), thumbStyle]} />
     </Pressable>
   );
 }

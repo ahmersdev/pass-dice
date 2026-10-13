@@ -7,6 +7,7 @@ export interface IActionCardProps {
   icon: IAppIcon;
   onPress?: () => void;
   disabled?: boolean;
-  accessibilityRole?: "button" | "link";
+  accessibilityRole?: "button" | "link" | "switch";
+  checked?: boolean;
   trailing?: ReactNode;
 }

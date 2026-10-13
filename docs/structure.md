@@ -136,7 +136,7 @@ Two files keep their types inline on purpose, because each stands alone and has 
 
 ### Hard-coded colours (intentional)
 
-Theme colours come from the theme everywhere except two places: the switch thumb in `custom-switch.styles.ts` (always `#FDFDFD`, on both themes) and the default `color` of the GitHub and LinkedIn icons (`#000000`, a fallback prop value).
+Theme colours come from the theme everywhere except one place: the default `color` of the GitHub and LinkedIn icons (`#000000`, a fallback prop value).
 
 ### `modules/` (local native modules)
 

@@ -9,10 +9,10 @@ export const customSwitchStyles = StyleSheet.create((theme) => ({
     justifyContent: "center",
     backgroundColor: value ? theme.colors.primary : theme.colors.text,
   }),
-  thumb: {
+  thumb: (value: boolean) => ({
     width: 20,
     height: 20,
     borderRadius: 10,
-    backgroundColor: "#FDFDFD",
-  },
+    backgroundColor: value ? theme.colors.onPrimary : theme.colors.background,
+  }),
 }));

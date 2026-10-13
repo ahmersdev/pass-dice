@@ -18,6 +18,8 @@ export default function Settings() {
         label="Dark Mode"
         description={isDark ? "Currently active" : "Currently off"}
         icon={isDark ? Moon : Sun}
+        accessibilityRole="switch"
+        checked={isDark}
         onPress={toggleTheme}
         trailing={
           <CustomSwitch
