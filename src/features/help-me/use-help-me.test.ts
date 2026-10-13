@@ -136,6 +136,66 @@ describe("useHelpMe", () => {
     await waitFor(() => expect(finishTransaction).toHaveBeenCalledTimes(1));
   });
 
+  it("retries a pending purchase whose finish failed", async () => {
+    jest.spyOn(console, "warn").mockImplementation(() => undefined);
+    const left = { productId: "tip_lunch", purchaseToken: "t1" };
+    mockGetAvailablePurchases.mockResolvedValue([left]);
+    finishTransaction.mockRejectedValueOnce(new Error("billing"));
+    const { result, rerender } = await setup();
+    await waitFor(() => expect(result.current.isProductsLoading).toBe(false));
+    expect(finishTransaction).toHaveBeenCalledTimes(1);
+
+    mockUseIAP.mockImplementation((options: IIapOptions) => {
+      iapOptions = options;
+      return {
+        connected: true,
+        products,
+        fetchProducts: jest.fn().mockResolvedValue(undefined),
+        requestPurchase,
+        finishTransaction,
+      };
+    });
+    rerender({});
+
+    await waitFor(() => expect(finishTransaction).toHaveBeenCalledTimes(2));
+  });
+
+  it("does not consume a pending-state purchase found on startup", async () => {
+    mockGetAvailablePurchases.mockResolvedValue([
+      { productId: "tip_lunch", purchaseState: "pending" },
+    ]);
+    const { result } = await setup();
+
+    await waitFor(() => expect(result.current.isProductsLoading).toBe(false));
+
+    expect(mockGetAvailablePurchases).toHaveBeenCalledTimes(1);
+    expect(finishTransaction).not.toHaveBeenCalled();
+  });
+
+  it("finishes the same purchase token only once when delivered twice", async () => {
+    let release: () => void = () => undefined;
+    finishTransaction.mockImplementation(
+      () => new Promise<void>((resolve) => (release = resolve)),
+    );
+    const { result } = await setup();
+    await waitFor(() => expect(result.current.isProductsLoading).toBe(false));
+    const purchase = { productId: "tip_coffee", purchaseToken: "same" };
+
+    let first: Promise<void> = Promise.resolve();
+    let second: Promise<void> = Promise.resolve();
+    await act(async () => {
+      first = iapOptions.onPurchaseSuccess(purchase);
+      second = iapOptions.onPurchaseSuccess(purchase);
+      release();
+      await Promise.all([first, second]);
+    });
+
+    expect(finishTransaction).toHaveBeenCalledTimes(1);
+    expect(
+      mockToastShow.mock.calls.filter(([arg]) => arg.type === "success"),
+    ).toHaveLength(1);
+  });
+
   it("releases the purchase lock for a deferred payment without consuming it", async () => {
     const { result } = await setup();
     await waitFor(() => expect(result.current.isProductsLoading).toBe(false));

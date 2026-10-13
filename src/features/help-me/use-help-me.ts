@@ -140,6 +140,7 @@ export default function useHelpMe(): IUseHelpMeReturn {
       const pendingPurchases = await getAvailablePurchases();
 
       hasConsumedPendingRef.current = true;
+      let hasFailure = false;
 
       for (const purchase of pendingPurchases) {
         if (
@@ -154,11 +155,17 @@ export default function useHelpMe(): IUseHelpMeReturn {
             finishTransaction({ purchase: item, isConsumable: true }),
           );
         } catch (pendingError) {
+          hasFailure = true;
           console.warn(
             "[useHelpMe] Failed to consume pending purchase:",
             pendingError,
           );
         }
+      }
+
+      // Allow another attempt, so an owned consumable cannot block buying again.
+      if (hasFailure) {
+        hasConsumedPendingRef.current = false;
       }
     } catch (pendingError) {
       console.warn(
