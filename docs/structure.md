@@ -167,7 +167,7 @@ Icon changes need a new native build to show up.
 ### `constants/`
 
 - `routes.ts`: `ROUTE_NAMES` (route file names) and `PAGE_TITLES` (the heading and tab label for each page).
-- `layout.ts`: tab bar height and margin, `getTabBarBottomInset` and `getTabBarStyle` (the navigator's tab bar style).
+- `layout.ts`: tab bar height and margin, `getTabBarStyle` (the navigator's tab bar style).
 
 ### `theme/unistyles.ts`
 
