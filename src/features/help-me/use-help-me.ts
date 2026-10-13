@@ -27,28 +27,43 @@ export default function useHelpMe(): IUseHelpMeReturn {
 
   const purchasingProductIdRef = useRef<string | null>(null);
   const hasConsumedPendingRef = useRef(false);
-  const finishingTokensRef = useRef(new Set<string>());
+  const finishingRef = useRef(
+    new Map<string, { promise: Promise<unknown>; announced: boolean }>(),
+  );
 
   // Completes a purchase once, even if the purchase listener and the startup
-  // sweep both see the same one.
+  // sweep both see the same one. A second caller waits for the first finish
+  // instead of starting another. It resolves true when the caller should show
+  // the thank-you: only the listener announces, and only once, so a purchase
+  // the startup sweep finished first still gets its thanks.
   const finishOnce = useCallback(
     async (
       purchase: Purchase,
-      finish: (purchase: Purchase) => Promise<void>,
+      finish: (purchase: Purchase) => Promise<unknown>,
+      announce: boolean,
     ) => {
       const token = purchase.purchaseToken ?? purchase.id;
+      const inFlight = finishingRef.current.get(token);
 
-      if (finishingTokensRef.current.has(token)) {
+      if (inFlight) {
+        await inFlight.promise;
+
+        if (announce && !inFlight.announced) {
+          inFlight.announced = true;
+          return true;
+        }
+
         return false;
       }
 
-      finishingTokensRef.current.add(token);
+      const entry = { promise: finish(purchase), announced: announce };
+      finishingRef.current.set(token, entry);
 
       try {
-        await finish(purchase);
-        return true;
+        await entry.promise;
+        return announce;
       } finally {
-        finishingTokensRef.current.delete(token);
+        finishingRef.current.delete(token);
       }
     },
     [],
@@ -94,11 +109,13 @@ export default function useHelpMe(): IUseHelpMeReturn {
       }
 
       try {
-        const finished = await finishOnce(purchase, (item) =>
-          finishTransaction({ purchase: item, isConsumable: true }),
+        const shouldThank = await finishOnce(
+          purchase,
+          (item) => finishTransaction({ purchase: item, isConsumable: true }),
+          true,
         );
 
-        if (finished) {
+        if (shouldThank) {
           showSuccess(purchase.productId);
         }
       } catch (finishError) {
@@ -151,8 +168,10 @@ export default function useHelpMe(): IUseHelpMeReturn {
         }
 
         try {
-          await finishOnce(purchase, (item) =>
-            finishTransaction({ purchase: item, isConsumable: true }),
+          await finishOnce(
+            purchase,
+            (item) => finishTransaction({ purchase: item, isConsumable: true }),
+            false,
           );
         } catch (pendingError) {
           hasFailure = true;

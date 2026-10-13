@@ -196,6 +196,30 @@ describe("useHelpMe", () => {
     ).toHaveLength(1);
   });
 
+  it("still thanks the user when the startup sweep finishes the purchase first", async () => {
+    let release: () => void = () => undefined;
+    finishTransaction.mockImplementation(
+      () => new Promise<void>((resolve) => (release = resolve)),
+    );
+    const left = { productId: "tip_coffee", purchaseToken: "same" };
+    mockGetAvailablePurchases.mockResolvedValue([left]);
+    const { result } = await setup();
+    await waitFor(() => expect(finishTransaction).toHaveBeenCalledTimes(1));
+
+    let delivered: Promise<void> = Promise.resolve();
+    await act(async () => {
+      delivered = iapOptions.onPurchaseSuccess(left);
+      release();
+      await delivered;
+    });
+
+    await waitFor(() => expect(result.current.isProductsLoading).toBe(false));
+    expect(finishTransaction).toHaveBeenCalledTimes(1);
+    expect(
+      mockToastShow.mock.calls.filter(([arg]) => arg.type === "success"),
+    ).toHaveLength(1);
+  });
+
   it("releases the purchase lock for a deferred payment without consuming it", async () => {
     const { result } = await setup();
     await waitFor(() => expect(result.current.isProductsLoading).toBe(false));
