@@ -50,7 +50,8 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "lint": "expo lint",
-    "test": "jest"
+    "test": "jest",
+    "audit": "pnpm audit --audit-level=critical"
   },
   "private": true,
   "packageManager": "pnpm@12.10.1",
